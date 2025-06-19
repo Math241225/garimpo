@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block admin_title %}Painel Admin - Garimpo Imports{% endblock %}</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block admin_head_extra %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-md admin-navbar fixed-top p-0">
+        <a class="navbar-brand admin-sidebar-brand col-md-3 col-lg-2 mr-0 px-3" href="{{ url_for('admin.admin_dashboard') }}">
+            <i class="fas fa-gem"></i> Garimpo Admin
+        </a>
+        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon" style="color: var(--cor-secundaria);"><i class="fas fa-bars"></i></span>
+        </button>
+        <ul class="navbar-nav px-3 ml-auto">
+            <li class="nav-item text-nowrap">
+                {% if current_user.is_authenticated %}
+                    <span class="navbar-text mr-3 d-none d-sm-inline">
+                        <i class="fas fa-user-shield"></i> {{ current_user.username }}
+                    </span>
+                    <a class="nav-link d-inline-block" href="{{ url_for('auth.logout_admin') }}" title="Sair da Área Administrativa">
+                        <i class="fas fa-sign-out-alt"></i> <span class="d-none d-sm-inline">Sair</span>
+                    </a>
+                {% else %}
+                     <a class="nav-link d-inline-block" href="{{ url_for('auth.login_admin') }}">
+                        <i class="fas fa-sign-in-alt mr-1"></i>Entrar (Admin)
+                    </a>
+                {% endif %}
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block admin-sidebar sidebar collapse">
+                <div class="sidebar-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'admin.admin_dashboard' %}active{% endif %}" href="{{ url_for('admin.admin_dashboard') }}">
+                                <i class="fas fa-tachometer-alt fa-fw"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            {# CORREÇÃO APLICADA AQUI: Removida a condição para 'admin_cadastrar_cliente' #}
+                            <a class="nav-link {% if 'admin_listar_clientes' in request.endpoint or 'admin_editar_coins' in request.endpoint %}active{% endif %}" href="{{ url_for('admin.admin_listar_clientes') }}">
+                                <i class="fas fa-users fa-fw"></i>Clientes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'admin.admin_cadastrar_cliente' %}active{% endif %}" href="{{ url_for('admin.admin_cadastrar_cliente') }}">
+                                <i class="fas fa-user-plus fa-fw"></i>Cadastrar Cliente
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.endpoint == 'admin.admin_adicionar_transacao' %}active{% endif %}" href="{{ url_for('admin.admin_adicionar_transacao') }}">
+                                <i class="fas fa-hand-holding-usd fa-fw"></i>Adicionar Transação
+                            </a>
+                        </li>
+                         <li class="nav-item mt-auto pt-3 border-top border-secondary">
+                            <a class="nav-link" href="{{ url_for('home') }}">
+                                <i class="fas fa-globe fa-fw"></i>Ver Site Público
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 admin-main-content">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                {% block admin_content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% block admin_scripts_extra %}{% endblock %}
+</body>
+</html>

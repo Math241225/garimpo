@@ -1,0 +1,90 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_title %}Lista de Clientes - Painel Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <h1><i class="fas fa-users"></i> Lista de Clientes</h1>
+    <a href="{{ url_for('admin.admin_cadastrar_cliente') }}" class="btn btn-primary">
+        <i class="fas fa-user-plus"></i> Adicionar Novo Cliente
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        {% if clientes_paginados and clientes_paginados.items %}
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Telefone</th>
+                            <th class="text-center">Garimpo Coins</th>
+                            <th class="text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cliente in clientes_paginados.items %}
+                        <tr>
+                            <td>{{ cliente.id }}</td>
+                            <td>{{ cliente.nome }}</td>
+                            <td>{{ cliente.email }}</td>
+                            <td>{{ cliente.telefone if cliente.telefone else '-' }}</td>
+                            <td class="text-center font-weight-bold" style="color: var(--cor-principal);">
+                                <i class="fas fa-coins"></i> {{ cliente.garimpo_coins }}
+                            </td>
+                            <td class="text-right">
+                                <a href="{{ url_for('admin.admin_editar_coins', cliente_id=cliente.id) }}" class="btn btn-sm btn-info" title="Editar Coins">
+                                    <i class="fas fa-star"></i> <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ url_for('admin.admin_excluir_cliente', cliente_id=cliente.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este cliente e todas as suas transações? Esta ação não pode ser desfeita.');">
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Excluir Cliente">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+             <!-- Paginação -->
+            {% if clientes_paginados.pages > 1 %}
+            <nav aria-label="Paginação de Clientes" class="p-3">
+                <ul class="pagination justify-content-center mb-0">
+                    {% if clientes_paginados.has_prev %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('admin.admin_listar_clientes', page=clientes_paginados.prev_num) }}"><i class="fas fa-chevron-left"></i></a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link"><i class="fas fa-chevron-left"></i></span></li>
+                    {% endif %}
+
+                    {% for page_num in clientes_paginados.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                        {% if page_num %}
+                            {% if clientes_paginados.page == page_num %}
+                                <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="{{ url_for('admin.admin_listar_clientes', page=page_num) }}">{{ page_num }}</a></li>
+                            {% endif %}
+                        {% else %}
+                             {% if loop.index > 2 and loop.index < clientes_paginados.pages -1 %} {# Evita '...' duplicados no início/fim se poucas páginas #}
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if clientes_paginados.has_next %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('admin.admin_listar_clientes', page=clientes_paginados.next_num) }}"><i class="fas fa-chevron-right"></i></a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link"><i class="fas fa-chevron-right"></i></span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-info m-3">Nenhum cliente registado ainda.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

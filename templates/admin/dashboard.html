@@ -1,0 +1,71 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_title %}Dashboard - Painel Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page-header">
+    <h1><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="stats-card text-center">
+            <div class="row align-items-center">
+                <div class="col-4"><i class="fas fa-users"></i></div>
+                <div class="col-8 text-right">
+                    <div class="stat-value">{{ total_clientes }}</div>
+                    <div class="stat-label">Clientes Registados</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stats-card text-center">
+             <div class="row align-items-center">
+                <div class="col-4"><i class="fas fa-exchange-alt"></i></div>
+                <div class="col-8 text-right">
+                    <div class="stat-value">{{ total_transacoes }}</div>
+                    <div class="stat-label">Transações Registadas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stats-card text-center">
+            <div class="row align-items-center">
+                <div class="col-4"><i class="fas fa-dollar-sign"></i></div>
+                <div class="col-8 text-right">
+                    <div class="stat-value">R$ {{ "%.2f"|format(soma_valores_transacoes|float) }}</div>
+                    <div class="stat-label">Valor Total Transacionado</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                Ações Rápidas
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('admin.admin_listar_clientes') }}" class="btn btn-primary btn-block mb-2"><i class="fas fa-users"></i> Gerir Clientes</a>
+                <a href="{{ url_for('admin.admin_adicionar_transacao') }}" class="btn btn-success btn-block text-white"><i class="fas fa-plus-circle"></i> Nova Transação</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+         <div class="card">
+            <div class="card-header">
+                Bem-vindo!
+            </div>
+            <div class="card-body">
+                <p>Bem-vindo ao painel administrativo da Garimpo Imports.</p>
+                <p>Utilize o menu à esquerda para navegar pelas diferentes secções e gerir os dados da sua loja.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

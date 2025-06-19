@@ -1,0 +1,53 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_title %}Adicionar Nova Transação - Painel Admin{% endblock %}
+
+{% block admin_content %}
+<div class="page-header">
+    <h1><i class="fas fa-hand-holding-usd"></i> Adicionar Nova Transação</h1>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST" action="" novalidate>
+            {{ form.hidden_tag() }} {# ESSENCIAL: Adiciona o token CSRF e outros campos ocultos #}
+
+            <div class="form-group">
+                {{ form.cliente_id.label(class="font-weight-bold") }} <span class="text-danger">*</span>
+                {# O WTForms irá popular este select com as 'choices' que definimos na rota #}
+                {{ form.cliente_id(class="form-control form-control-lg") }}
+                {% if form.cliente_id.errors %}
+                    {% for error in form.cliente_id.errors %}
+                        <small class="form-text text-danger">{{ error }}</small>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.valor.label(class="font-weight-bold") }} <span class="text-danger">*</span>
+                {{ form.valor(class="form-control form-control-lg", placeholder="Ex: 150.75") }}
+                {% if form.valor.errors %}
+                    {% for error in form.valor.errors %}
+                        <small class="form-text text-danger">{{ error }}</small>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.descricao.label(class="font-weight-bold") }}
+                {{ form.descricao(class="form-control form-control-lg", rows="3", placeholder="Ex: Compra de item X, Serviço Y") }}
+                {% if form.descricao.errors %}
+                    {% for error in form.descricao.errors %}
+                        <small class="form-text text-danger">{{ error }}</small>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+            <div class="mt-4">
+                {{ form.submit(class="btn btn-success btn-lg mr-2 text-white") }}
+                <a href="{{ url_for('admin.admin_listar_clientes') }}" class="btn btn-secondary btn-lg">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
