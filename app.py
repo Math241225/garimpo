@@ -11,12 +11,20 @@ from forms import AdminLoginForm, ClienteLoginForm, ClienteCadastroForm, Transac
 
 # --- 1. CONFIGURAÇÃO DA APLICAÇÃO ---
 app = Flask(__name__, instance_relative_config=True)
-# A SECRET_KEY é lida a partir das variáveis de ambiente do Render
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'uma-chave-padrao-apenas-para-desenvolvimento-local-mude-isto')
-# O caminho do banco de dados aponta para o disco persistente do Render
-db_path = os.path.join(os.environ.get('RENDER_DISK_PATH', 'instance'), 'database.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+
+# --- CORREÇÃO DO BANCO DE DADOS PARA RENDER ---
+# Define o diretório do disco persistente
+render_disk_path = '/var/data'
+# Define o caminho completo do ficheiro do banco de dados
+db_file_path = os.path.join(render_disk_path, 'database.db')
+
+# Garante que o diretório do banco de dados existe
+os.makedirs(render_disk_path, exist_ok=True)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_file_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# ---------------------------------------------
 
 # --- 2. INICIALIZAÇÃO DAS EXTENSÕES ---
 db = SQLAlchemy(app)
@@ -246,7 +254,6 @@ def admin_excluir_cliente(cliente_id):
 @admin_bp.route('/cadastrar_cliente_admin', methods=['GET', 'POST'])
 @login_required
 def admin_cadastrar_cliente():
-    # Este formulário pode ser refatorado para Flask-WTF no futuro
     if request.method == 'POST':
         nome = request.form.get('nome')
         email = request.form.get('email')
