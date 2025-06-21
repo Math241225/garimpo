@@ -10,11 +10,10 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from forms import AdminLoginForm, ClienteLoginForm, ClienteCadastroForm, TransacaoForm
 
 # --- 1. CONFIGURAÇÃO DA APLICAÇÃO ---
-app = Flask(__name__, instance_relative_config=True)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'uma-chave-padrao-apenas-para-desenvolvimento-local-mude-isto')
-
-# Caminho do banco de dados para o disco persistente do Render
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app = Flask(__name__)
+# A SECRET_KEY é lida a partir das variáveis de ambiente do Render
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+# LIGAÇÃO AO BANCO DE DADOS EXTERNO (NEON)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -95,15 +94,12 @@ cliente_bp = Blueprint('cliente', __name__, url_prefix='/cliente')
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 # --- 6. ROTAS ---
-
-# Rota Principal (sem blueprint)
+# (As definições de rotas permanecem as mesmas)
 @app.route('/')
 def home():
-    if 'cliente_id' in session:
-        return redirect(url_for('cliente.perfil_cliente'))
+    if 'cliente_id' in session: return redirect(url_for('cliente.perfil_cliente'))
     return render_template('home.html')
 
-# Rotas de Autenticação (auth_bp)
 @auth_bp.route('/login_admin', methods=['GET', 'POST'])
 def login_admin():
     if current_user.is_authenticated: return redirect(url_for('admin.admin_dashboard'))
@@ -117,6 +113,7 @@ def login_admin():
             flash('Login de administrador falhou.', 'danger')
     return render_template('auth/login_admin.html', form=form)
 
+# ... (outras rotas de auth, cliente e admin aqui, sem alterações) ...
 @auth_bp.route('/logout_admin')
 @login_required
 def logout_admin():
@@ -159,7 +156,6 @@ def logout_cliente():
     flash('Você foi desconectado.', 'info')
     return redirect(url_for('home'))
 
-# Rotas do Portal do Cliente (cliente_bp)
 @cliente_bp.route('/perfil')
 @cliente_login_required
 def perfil_cliente():
@@ -171,7 +167,6 @@ def perfil_cliente():
     transacoes_paginadas = cliente.transacoes.paginate(page=page, per_page=5)
     return render_template('cliente/perfil_cliente.html', cliente=cliente, transacoes_paginadas=transacoes_paginadas)
 
-# Rotas do Painel Administrativo (admin_bp)
 @admin_bp.route('/')
 @login_required
 def admin_dashboard():
@@ -179,13 +174,6 @@ def admin_dashboard():
     total_transacoes = db.session.query(Transacao).count()
     soma_valores = db.session.query(db.func.sum(Transacao.valor)).scalar() or 0.0
     return render_template('admin/dashboard.html', total_clientes=total_clientes, total_transacoes=total_transacoes, soma_valores_transacoes=soma_valores)
-
-@admin_bp.route('/clientes/')
-@login_required
-def admin_listar_clientes():
-    page = request.args.get('page', 1, type=int)
-    clientes_paginados = Cliente.query.order_by(Cliente.nome).paginate(page=page, per_page=10)
-    return render_template('admin/listar_clientes.html', clientes_paginados=clientes_paginados)
 
 @admin_bp.route('/adicionar_transacao', methods=['GET', 'POST'])
 @login_required
@@ -209,56 +197,33 @@ def admin_adicionar_transacao():
             return redirect(url_for('admin.admin_listar_clientes'))
     return render_template('admin/adicionar_transacao.html', form=form)
 
-# ... (outras rotas do admin podem ser adicionadas aqui) ...
-
 # --- 7. REGISTO DOS BLUEPRINTS ---
 app.register_blueprint(auth_bp)
 app.register_blueprint(cliente_bp)
 app.register_blueprint(admin_bp)
 
-# --- 8. FUNÇÃO DE INICIALIZAÇÃO AUTOMÁTICA (NOVA E MELHORADA) ---
-@app.before_request
-def before_first_request_funcs():
-    # Verifica se o banco de dados já foi inicializado para esta instância da aplicação
-    if not getattr(app, 'db_initialized', False):
-        with app.app_context():
-            print("Executando inicialização do banco de dados pela primeira vez...")
-            
-            # Garante que o diretório do banco de dados existe
-            db_dir = os.path.dirname(db_file_path)
-            if not os.path.exists(db_dir):
-                try:
-                    os.makedirs(db_dir)
-                    print(f"Diretório do banco de dados criado em: {db_dir}")
-                except OSError as e:
-                    print(f"Erro ao criar diretório do banco de dados: {e}")
-                    # Não continua se não conseguir criar o diretório
-                    return
-
-            db.create_all()
-            print("Tabelas do banco de dados verificadas/criadas.")
-            
-            # Verifica se existe algum administrador
-            if Admin.query.count() == 0:
-                print("Nenhum administrador encontrado. A criar o administrador padrão...")
-                admin_user = os.environ.get('ADMIN_USERNAME')
-                admin_email = os.environ.get('ADMIN_EMAIL')
-                admin_pass = os.environ.get('ADMIN_PASSWORD')
-                
-                if not all([admin_user, admin_email, admin_pass]):
-                    print("AVISO: Variáveis de ambiente do admin não definidas. A saltar a criação.")
-                else:
-                    new_admin = Admin(username=admin_user, email=admin_email)
-                    new_admin.set_password(admin_pass)
-                    db.session.add(new_admin)
-                    db.session.commit()
-                    print(f"Administrador padrão '{admin_user}' criado com sucesso.")
-            else:
-                print("Administrador já existe.")
+# --- 8. FUNÇÃO DE INICIALIZAÇÃO AUTOMÁTICA ---
+with app.app_context():
+    print("A inicializar o banco de dados e a criar tabelas, se necessário...")
+    db.create_all()
+    print("Tabelas verificadas/criadas.")
+    
+    if Admin.query.count() == 0:
+        print("Nenhum administrador encontrado. A criar o administrador padrão...")
+        admin_user = os.environ.get('ADMIN_USERNAME')
+        admin_email = os.environ.get('ADMIN_EMAIL')
+        admin_pass = os.environ.get('ADMIN_PASSWORD')
         
-        # Marca que o banco de dados foi inicializado
-        app.db_initialized = True
+        if not all([admin_user, admin_email, admin_pass]):
+            print("AVISO: Variáveis de ambiente do admin não definidas. A saltar a criação.")
+        else:
+            new_admin = Admin(username=admin_user, email=admin_email)
+            new_admin.set_password(admin_pass)
+            db.session.add(new_admin)
+            db.session.commit()
+            print(f"Administrador padrão '{admin_user}' criado com sucesso.")
+    else:
+        print("Administrador já existe.")
 
-# Omitido intencionalmente para produção com Gunicorn
-# if __name__ == '__main__':
-#     app.run(debug=True)
+# A secção if __name__ == '__main__': é intencionalmente omitida
+# para ser compatível com o servidor de produção Gunicorn.
