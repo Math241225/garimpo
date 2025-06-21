@@ -14,8 +14,8 @@ app = Flask(__name__, instance_relative_config=True)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'uma-chave-padrao-apenas-para-desenvolvimento-local-mude-isto')
 
 # Caminho do banco de dados para o disco persistente do Render
-db_file_path = os.path.join('/var/data', 'database.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_file_path}'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # --- 2. INICIALIZAÇÃO DAS EXTENSÕES ---
