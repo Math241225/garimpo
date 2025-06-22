@@ -1,42 +1,30 @@
-/* === GERAL === */
+/* === GERAL E VARIÁVEIS DE COR === */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 :root {
     --cor-principal: #fac239; /* Amarelo Garimpo */
     --cor-principal-hover: #e7b02f;
     --cor-secundaria: #2c3e50; /* Azul Escuro/Grafite */
-    --cor-texto: #333;
+    --cor-texto: #343a40;
     --cor-texto-claro: #f8f9fa;
-    --cor-fundo: #f4f6f8;
+    --cor-fundo: #f8f9fa;
     --cor-fundo-alt: #ffffff;
     --cor-borda: #dee2e6;
-    --sombra-suave: 0 4px 15px rgba(0, 0, 0, 0.08);
+    --sombra-suave: 0 4px 15px rgba(0, 0, 0, 0.07);
     --sombra-media: 0 6px 20px rgba(0, 0, 0, 0.1);
-    --border-radius-padrao: 0.5rem; /* 8px */
-    --navbar-altura: 56px; /* Altura estimada da navbar */
+    --border-radius-padrao: 0.5rem;
+    --navbar-altura: 60px;
 }
 
 body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--cor-fundo);
     color: var(--cor-texto);
-    line-height: 1.6;
-    font-size: 16px;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-.container-principal {
-    flex: 1;
-    padding-top: var(--navbar-altura); /* Altura da navbar para o layout base de cliente */
+    padding-top: var(--navbar-altura); /* Espaço para a navbar fixa */
 }
 
 a {
     color: var(--cor-principal);
-    text-decoration: none;
     transition: color 0.3s ease;
 }
 
@@ -48,53 +36,24 @@ a:hover {
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     color: var(--cor-secundaria);
-    margin-top: 0;
 }
 
 .btn {
     border-radius: var(--border-radius-padrao);
-    padding: 0.75rem 1.5rem;
+    padding: 0.6rem 1.25rem;
     font-weight: 500;
     transition: all 0.3s ease;
-    box-shadow: var(--sombra-suave);
     border: none;
 }
 
 .btn-primary {
     background-color: var(--cor-principal);
-    border-color: var(--cor-principal);
-    color: var(--cor-secundaria); /* Texto escuro para contraste com amarelo */
+    color: var(--cor-secundaria);
 }
 
 .btn-primary:hover {
     background-color: var(--cor-principal-hover);
-    border-color: var(--cor-principal-hover);
     color: var(--cor-secundaria);
-    transform: translateY(-2px);
-    box-shadow: var(--sombra-media);
-}
-
-.btn-secondary {
-    background-color: var(--cor-secundaria);
-    border-color: var(--cor-secundaria);
-    color: var(--cor-texto-claro);
-}
-
-.btn-secondary:hover {
-    background-color: #3a506b; /* Um pouco mais claro */
-    border-color: #3a506b;
-    color: var(--cor-texto-claro);
-    transform: translateY(-2px);
-    box-shadow: var(--sombra-media);
-}
-
-.btn-danger {
-    background-color: #e74c3c;
-    border-color: #e74c3c;
-}
-.btn-danger:hover {
-    background-color: #c0392b;
-    border-color: #c0392b;
     transform: translateY(-2px);
     box-shadow: var(--sombra-media);
 }
@@ -103,420 +62,111 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: var(--border-radius-padrao);
     border: 1px solid var(--cor-borda);
     padding: 0.75rem 1rem;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form-control:focus {
     border-color: var(--cor-principal);
-    box-shadow: 0 0 0 0.2rem rgba(250, 194, 57, 0.25); /* Sombra de foco com cor principal */
+    box-shadow: 0 0 0 0.2rem rgba(250, 194, 57, 0.25);
 }
 
 .card {
     border: none;
     border-radius: var(--border-radius-padrao);
     box-shadow: var(--sombra-suave);
-    margin-bottom: 1.5rem;
     background-color: var(--cor-fundo-alt);
 }
+
 .card-header {
     background-color: var(--cor-secundaria);
     color: var(--cor-texto-claro);
     font-weight: 600;
-    border-bottom: 1px solid var(--cor-borda);
-    border-top-left-radius: var(--border-radius-padrao);
-    border-top-right-radius: var(--border-radius-padrao);
-}
-.card-body {
-    padding: 1.5rem;
 }
 
-.table {
-    margin-bottom: 0; /* Remover margem se dentro de um card */
-}
-.table thead th {
-    background-color: var(--cor-fundo);
-    color: var(--cor-secundaria);
-    font-weight: 600;
-    border-bottom-width: 2px;
-    border-color: var(--cor-borda);
-}
-.table tbody tr:hover {
-    background-color: rgba(250, 194, 57, 0.1); /* Hover suave com cor principal */
-}
-
-.alert {
-    border-radius: var(--border-radius-padrao);
+/* === NAVBAR PRINCIPAL (PÚBLICA / CLIENTE) === */
+.navbar-publica {
+    background-color: var(--cor-fundo-alt);
     box-shadow: var(--sombra-suave);
-}
-.alert-success {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-    color: #155724;
-}
-.alert-danger {
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-    color: #721c24;
-}
-.alert-info {
-    background-color: #d1ecf1;
-    border-color: #bee5eb;
-    color: #0c5460;
-}
-.alert-warning {
-    background-color: #fff3cd;
-    border-color: #ffeeba;
-    color: #856404;
+    height: var(--navbar-altura);
 }
 
-
-/* === NAVBAR PRINCIPAL (Cliente) === */
-.navbar-cliente {
-    background-color: var(--cor-secundaria);
-    box-shadow: var(--sombra-media);
-    padding: 0.8rem 1rem;
-    min-height: var(--navbar-altura);
-}
-.navbar-cliente .navbar-brand {
+.navbar-publica .navbar-brand {
     color: var(--cor-principal) !important;
     font-weight: 700;
     font-size: 1.5rem;
 }
-.navbar-cliente .navbar-brand img {
-    max-height: 40px;
-    margin-right: 10px;
-}
-.navbar-cliente .nav-link {
-    color: rgba(255, 255, 255, 0.75) !important;
+
+.navbar-publica .nav-link {
+    color: var(--cor-secundaria) !important;
     font-weight: 500;
-    margin-left: 1rem;
-    transition: color 0.3s ease;
 }
-.navbar-cliente .nav-link:hover,
-.navbar-cliente .nav-link.active {
+
+.navbar-publica .nav-link:hover, .navbar-publica .nav-link.active {
     color: var(--cor-principal) !important;
 }
-.navbar-cliente .btn-logout {
-    background-color: transparent;
-    border: 1px solid var(--cor-principal);
-    color: var(--cor-principal);
-}
-.navbar-cliente .btn-logout:hover {
-    background-color: var(--cor-principal);
-    color: var(--cor-secundaria);
-}
 
-/* === PÁGINA INICIAL (home.html) === */
-.hero-section {
-    /* background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.9)), url('../images/background-garimpo.jpg') no-repeat center center/cover; */ /* Adicione uma imagem de fundo aqui */
-    background-color: var(--cor-secundaria); /* Cor de fallback se não houver imagem */
-    background-image: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.9)); /* Gradiente sobre a cor */
-    color: var(--cor-texto-claro);
-    padding: 100px 0;
-    text-align: center;
-}
-.hero-section h1 {
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: var(--cor-principal);
-}
-.hero-section p {
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* === PÁGINAS DE AUTENTICAÇÃO (Login/Cadastro) === */
+/* === PÁGINAS DE AUTENTICAÇÃO === */
 .auth-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: calc(100vh - var(--navbar-altura) - 70px); /* Subtrai navbar e um pouco de padding */
-    padding: 2rem 0;
+    min-height: calc(100vh - var(--navbar-altura));
 }
+
 .auth-form-container {
-    background-color: var(--cor-fundo-alt);
     padding: 2.5rem;
     border-radius: var(--border-radius-padrao);
     box-shadow: var(--sombra-media);
     width: 100%;
-    max-width: 450px; /* Largura máxima para formulários de auth */
+    max-width: 450px;
+    background-color: var(--cor-fundo-alt);
 }
-.auth-form-container .form-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-.auth-form-container .form-header img {
-    max-width: 80px;
-    margin-bottom: 1rem;
-}
-.auth-form-container .form-header h2 {
-    color: var(--cor-secundaria);
-    font-weight: 700;
-}
-.auth-form-container .form-group label {
-    font-weight: 500;
-    color: var(--cor-secundaria);
-}
-.auth-form-container .btn-submit {
-    background-color: var(--cor-principal);
-    color: var(--cor-secundaria);
-    font-weight: 600;
-    padding: 0.8rem;
-    width: 100%;
-    margin-top: 1rem;
-}
-.auth-form-container .btn-submit:hover {
-    background-color: var(--cor-principal-hover);
-}
-.auth-form-container .auth-link {
-    display: block;
-    text-align: center;
-    margin-top: 1.5rem;
-    color: var(--cor-secundaria);
-}
-.auth-form-container .auth-link a {
-    font-weight: 600;
-}
-
 
 /* === PERFIL DO CLIENTE === */
-.perfil-header {
-    background-color: var(--cor-secundaria);
-    color: var(--cor-texto-claro);
-    padding: 2rem;
-    border-radius: var(--border-radius-padrao);
-    margin-bottom: 2rem;
-    text-align: center;
-}
-.perfil-header h1 {
-    color: var(--cor-principal);
-    margin-bottom: 0.5rem;
-}
-.perfil-header p {
-    font-size: 1.1rem;
-    opacity: 0.9;
-}
 .garimpo-coins-display {
     background-color: var(--cor-principal);
     color: var(--cor-secundaria);
-    padding: 1.5rem;
+    padding: 2rem;
     border-radius: var(--border-radius-padrao);
     text-align: center;
-    margin-bottom: 2rem;
     box-shadow: var(--sombra-media);
 }
-.garimpo-coins-display .coins-label {
-    font-size: 1.2rem;
-    font-weight: 500;
-    display: block;
-    margin-bottom: 0.5rem;
-}
+
 .garimpo-coins-display .coins-value {
-    font-size: 3rem;
+    font-size: 3.5rem;
     font-weight: 700;
-    display: block;
-}
-.garimpo-coins-display .fas.fa-coins {
-    font-size: 2.5rem;
-    margin-right: 10px;
-    vertical-align: middle;
 }
 
-.historico-transacoes .card-header {
-    background-color: var(--cor-fundo);
-    color: var(--cor-secundaria);
-}
-.transacao-item {
+.historico-transacoes .transacao-item {
     border-bottom: 1px solid var(--cor-borda);
     padding: 1rem 0;
 }
-.transacao-item:last-child {
+
+.historico-transacoes .transacao-item:last-child {
     border-bottom: none;
-}
-.transacao-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.transacao-info .data-desc span {
-    display: block;
-}
-.transacao-info .data-desc .data {
-    font-size: 0.9rem;
-    color: #6c757d;
-}
-.transacao-info .valor-pontos {
-    text-align: right;
-}
-.transacao-info .valor-pontos .valor {
-    font-weight: 600;
-    font-size: 1.1rem;
-    color: #28a745; /* Verde para valor positivo */
-}
-.transacao-info .valor-pontos .pontos {
-    font-size: 0.9rem;
-    color: var(--cor-principal);
-    font-weight: 500;
 }
 
 /* === PAINEL ADMIN === */
-.admin-sidebar {
-    background-color: var(--cor-secundaria);
-    color: var(--cor-texto-claro);
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    padding-top: var(--navbar-altura); /* Para compensar a navbar admin que é fixed-top */
-    height: 100vh; /* Ocupa toda a altura */
-    position: fixed; /* Mantém a sidebar fixa */
-    top: 0;
-    left: 0;
-}
-.admin-sidebar .admin-sidebar-brand { /* Corrigido: .navbar-brand para .admin-sidebar-brand no HTML */
-    color: var(--cor-principal) !important;
-    font-weight: 600;
-    padding: 0.8rem 1.5rem; /* Ajustado para corresponder à altura da navbar */
-    line-height: var(--navbar-altura); /* Alinha verticalmente se a altura for consistente */
-    height: var(--navbar-altura);
-    display: block;
-    font-size: 1.3rem;
-    background-color: rgba(0,0,0,0.1);
-}
-.admin-sidebar .nav-link {
-    color: rgba(255,255,255,0.7);
-    padding: 0.8rem 1.5rem;
-    border-left: 4px solid transparent;
-    transition: all 0.3s ease;
-}
-.admin-sidebar .nav-link:hover {
-    color: var(--cor-texto-claro);
-    background-color: rgba(250, 194, 57, 0.1);
-    border-left-color: var(--cor-principal);
-}
-.admin-sidebar .nav-link.active {
-    color: var(--cor-principal);
-    font-weight: 600;
-    background-color: rgba(0,0,0,0.2);
-    border-left-color: var(--cor-principal);
+body.admin-body {
+    padding-top: 0;
 }
 
-.admin-navbar { /* Barra de topo do admin */
-    background-color: var(--cor-fundo-alt);
-    box-shadow: var(--sombra-suave);
-    border-bottom: 1px solid var(--cor-borda);
-    min-height: var(--navbar-altura);
-    padding-left: 0; /* Removido para alinhar com a sidebar */
-}
-.admin-navbar .nav-link, .admin-navbar .navbar-text {
-    color: var(--cor-secundaria) !important;
+.admin-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: var(--navbar-altura) 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+    background-color: var(--cor-secundaria);
 }
 
 .admin-main-content {
+    margin-left: 220px; /* Largura da sidebar, ajuste se necessário */
     padding: 2rem;
-    margin-top: var(--navbar-altura); /* CORREÇÃO: Espaço para a navbar admin fixa no topo */
-    margin-left: 220px; /* Largura da .admin-sidebar (col-md-3 col-lg-2 pode ser ~216px-220px) */
-                                /* Se a sidebar tiver largura diferente, ajuste aqui */
-}
-.admin-main-content .page-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--cor-borda);
-}
-.admin-main-content .page-header h1 {
-    font-size: 1.8rem;
-    color: var(--cor-secundaria);
-}
-.stats-card {
-    background-color: var(--cor-secundaria);
-    color: var(--cor-texto-claro);
-    border-radius: var(--border-radius-padrao);
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    box-shadow: var(--sombra-suave);
-}
-.stats-card .stat-value {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--cor-principal);
-}
-.stats-card .stat-label {
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
-.stats-card .fas {
-    font-size: 2.5rem;
-    opacity: 0.5;
+    padding-top: calc(var(--navbar-altura) + 2rem);
 }
 
-
-/* === PAGINAÇÃO === */
-.pagination .page-item .page-link {
-    color: var(--cor-principal);
-    border-radius: var(--border-radius-padrao) !important; /* Bootstrap override */
-    margin: 0 0.2rem;
-    border: 1px solid var(--cor-borda);
+.admin-navbar {
+    z-index: 101; /* Fica acima da sidebar */
 }
-.pagination .page-item.active .page-link {
-    background-color: var(--cor-principal);
-    border-color: var(--cor-principal);
-    color: var(--cor-secundaria);
-    font-weight: 600;
-}
-.pagination .page-item.disabled .page-link {
-    color: #6c757d;
-    background-color: var(--cor-fundo);
-    border-color: var(--cor-borda);
-}
-.pagination .page-item .page-link:hover {
-    background-color: rgba(250, 194, 57, 0.1);
-    border-color: var(--cor-principal-hover);
-}
-
-/* === FOOTER === */
-.footer {
-    background-color: var(--cor-secundaria);
-    color: rgba(255,255,255,0.7);
-    padding: 2rem 0;
-    text-align: center;
-    font-size: 0.9rem;
-    margin-top: auto; /* Empurra para baixo */
-}
-.footer a {
-    color: var(--cor-principal);
-}
-.footer a:hover {
-    color: var(--cor-principal-hover);
-}
-
-/* Responsividade */
-@media (max-width: 767.98px) { /* Alinhado com o breakpoint -md do Bootstrap */
-    .admin-sidebar {
-        position: static; /* Sidebar não é mais fixa em telas pequenas */
-        height: auto;
-        padding-top: 0;
-        margin-top: var(--navbar-altura); /* Abaixo da navbar admin */
-        width: 100%;
-        box-shadow: none;
-    }
-    .admin-main-content {
-        margin-left: 0; /* Conteúdo ocupa toda a largura */
-        margin-top: 0; /* Já que a sidebar não é mais fixa ao lado */
-        padding-top: 1rem; /* Reduz padding se necessário */
-    }
-    .admin-navbar .navbar-brand { /* Esconde a brand da sidebar na navbar de topo em telas pequenas */
-        display: none;
-    }
-    .navbar-cliente .nav-link {
-        margin-left: 0;
-        padding: 0.5rem 1rem;
-    }
-    .hero-section h1 {
-        font-size: 2.5rem;
-    }
-    .hero-section p {
-        font-size: 1rem;
-    }
-}
-

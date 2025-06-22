@@ -1,50 +1,11 @@
 {% extends "base_layout.html" %}
-
-{% block title %}Bem-vindo à Garimpo Imports{% endblock %}
-
-{% block content_wrapper %}
-<div class="hero-section">
-    <div class="container">
-        <h1><i class="fas fa-gem"></i> Garimpo Imports</h1>
-        <p class="lead">Sua outlet online de produtos importados e de marcas conhecidas. Acumule Garimpo Coins e ganhe presentes!</p>
-        {% if not session.cliente_id %}
-        <a href="{{ url_for('auth.cadastro_cliente') }}" class="btn btn-primary btn-lg mr-2">Crie sua Conta</a>
-        <a href="{{ url_for('auth.login_cliente') }}" class="btn btn-secondary btn-lg">Faça Login</a>
-        {% else %}
-        <a href="{{ url_for('cliente.perfil_cliente') }}" class="btn btn-primary btn-lg">Ver Meu Perfil</a>
-        {% endif %}
-    </div>
-</div>
-
-<div class="container mt-5 mb-5">
-    <div class="row text-center">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <i class="fas fa-star fa-3x mb-3" style="color: var(--cor-principal);"></i>
-                    <h3 class="card-title">Produtos Exclusivos</h3>
-                    <p class="card-text">Descubra itens importados e de marcas renomadas com qualidade garantida.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <i class="fas fa-coins fa-3x mb-3" style="color: var(--cor-principal);"></i>
-                    <h3 class="card-title">Garimpo Coins</h3>
-                    <p class="card-text">Acumule pontos a cada compra e troque por presentes incríveis da nossa loja.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <i class="fas fa-gift fa-3x mb-3" style="color: var(--cor-principal);"></i>
-                    <h3 class="card-title">Presentes Especiais</h3>
-                    <p class="card-text">Ao atingir 10 Garimpo Coins, você ganha um presente exclusivo. Aproveite!</p>
-                </div>
-            </div>
-        </div>
-    </div>
+{% block title %}Bem-vindo - Garimpo Imports{% endblock %}
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-4"><i class="fas fa-gem" style="color: var(--cor-principal);"></i> Garimpo Imports</h1>
+    <p class="lead">Sua outlet online para produtos importados e de marcas. Acumule pontos e ganhe presentes!</p>
+    <hr class="my-4">
+    <p>Junte-se ao nosso clube de fidelidade para ter acesso a benefícios exclusivos.</p>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('auth.cadastro_cliente') }}" role="button">Crie sua Conta</a>
 </div>
 {% endblock %}

@@ -1,54 +1,26 @@
 {% extends "base_layout.html" %}
-
-{% block title %}Login Cliente - Garimpo Imports{% endblock %}
-
+{% block title %}Login Cliente{% endblock %}
 {% block content %}
 <div class="auth-wrapper">
     <div class="auth-form-container">
-        <div class="form-header">
-            <i class="fas fa-user-circle fa-3x" style="color: var(--cor-principal);"></i>
-            <h2 class="mt-3">Login Cliente</h2>
+        <div class="text-center mb-4">
+            <h2 class="h3 mb-3 font-weight-normal">Login Cliente</h2>
         </div>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
         <form method="POST" action="" novalidate>
-            {{ form.hidden_tag() }} {# Token CSRF #}
-            
+            {{ form.hidden_tag() }}
             <div class="form-group">
-                {{ form.email.label(class="font-weight-bold") }}
-                {{ form.email(class="form-control form-control-lg", placeholder="Digite seu email") }}
-                {% if form.email.errors %}
-                    {% for error in form.email.errors %}
-                        <small class="form-text text-danger">{{ error }}</small>
-                    {% endfor %}
-                {% endif %}
+                {{ form.email.label }}
+                {{ form.email(class="form-control", placeholder="seu.email@exemplo.com") }}
+                {% for error in form.email.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
             </div>
-
             <div class="form-group">
-                {{ form.password.label(class="font-weight-bold") }}
-                {{ form.password(class="form-control form-control-lg", placeholder="Digite sua senha") }}
-                {% if form.password.errors %}
-                    {% for error in form.password.errors %}
-                        <small class="form-text text-danger">{{ error }}</small>
-                    {% endfor %}
-                {% endif %}
+                {{ form.password.label }}
+                {{ form.password(class="form-control", placeholder="Sua senha") }}
+                {% for error in form.password.errors %}<small class="text-danger">{{ error }}</small>{% endfor %}
             </div>
-
-            {{ form.submit(class="btn btn-submit btn-lg btn-block mt-4") }}
+            {{ form.submit(class="btn btn-lg btn-primary btn-block mt-4") }}
         </form>
-        <p class="auth-link">
+        <p class="text-center mt-3">
             Não tem uma conta? <a href="{{ url_for('auth.cadastro_cliente') }}">Cadastre-se aqui</a>
         </p>
     </div>
