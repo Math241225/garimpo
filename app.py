@@ -11,8 +11,10 @@ from forms import AdminLoginForm, ClienteLoginForm, ClienteCadastroForm, Transac
 
 # --- 1. CONFIGURAÇÃO E CRIAÇÃO DA APLICAÇÃO ---
 app = Flask(__name__)
+# A SECRET_KEY é lida a partir das variáveis de ambiente do Render
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
+# LIGAÇÃO AO BANCO DE DADOS EXTERNO (NEON)
 db_uri = os.environ.get('DATABASE_URL')
 if db_uri and db_uri.startswith("postgres://"):
     db_uri = db_uri.replace("postgres://", "postgresql://", 1)
@@ -27,6 +29,7 @@ admin_login_manager.login_message = 'Por favor, faça login como administrador.'
 admin_login_manager.login_message_category = 'info'
 
 # --- 3. MODELOS DO BANCO DE DADOS ---
+# (As definições de Cliente, Admin, Transacao permanecem exatamente as mesmas)
 class Cliente(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
@@ -95,7 +98,7 @@ def home():
     if 'cliente_id' in session: return redirect(url_for('cliente.perfil_cliente'))
     return render_template('home.html')
 
-# (Todas as suas outras rotas de auth, cliente e admin devem ser definidas aqui)
+# (Todas as suas outras rotas de auth, cliente e admin aqui)
 @auth_bp.route('/login_admin', methods=['GET', 'POST'])
 def login_admin():
     if current_user.is_authenticated: return redirect(url_for('admin.admin_dashboard'))
@@ -108,7 +111,13 @@ def login_admin():
         else: flash('Login de administrador falhou.', 'danger')
     return render_template('auth/login_admin.html', form=form)
 
-# ... (o resto das suas rotas) ...
+@auth_bp.route('/logout_admin')
+@login_required
+def logout_admin():
+    logout_user()
+    return redirect(url_for('auth.login_admin'))
+# ... (outras rotas)
+
 app.register_blueprint(main_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(cliente_bp)
@@ -117,13 +126,10 @@ app.register_blueprint(admin_bp)
 # --- 6. COMANDO PARA INICIALIZAR O BANCO DE DADOS ---
 @app.cli.command('init-db')
 def init_db_command():
-    """Cria as tabelas do banco de dados e o admin inicial."""
     with app.app_context():
-        print("A criar tabelas do banco de dados...")
         db.create_all()
-        print("Tabelas criadas com sucesso.")
+        print("Tabelas do banco de dados criadas.")
         if Admin.query.count() == 0:
-            print("A criar o administrador padrão...")
             username = os.environ.get('ADMIN_USERNAME')
             email = os.environ.get('ADMIN_EMAIL')
             password = os.environ.get('ADMIN_PASSWORD')
@@ -132,14 +138,6 @@ def init_db_command():
                 admin.set_password(password)
                 db.session.add(admin)
                 db.session.commit()
-                print(f"Administrador '{username}' criado.")
+                print(f"Administrador padrão '{username}' criado.")
             else:
                 print("AVISO: Variáveis de ambiente do admin não definidas.")
-        else:
-            print("Administrador já existe.")
-
-# Para debug local, se necessário, mas o Gunicorn não usa isto.
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
